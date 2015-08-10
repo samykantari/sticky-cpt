@@ -13,7 +13,7 @@ if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
 
         public function __construct(){
 
-            add_action( 'init', array($this, 'init'));
+            add_action( 'admin_init', array($this, 'init'));
 
             add_action( 'admin_footer-post.php', array( $this ,'add_sticky' ) );
             add_action( 'admin_footer-post-new.php', array( $this ,'add_sticky' ) );
@@ -44,8 +44,6 @@ if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
 
 
         public function edit_counter ($views) {
-            // echo "<pre>".print_r($views, 1)."</pre>";
-            // die();
             $views = Sticky_cpt_posts::edit_counter( $views );
 
             return $views;

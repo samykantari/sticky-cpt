@@ -26,7 +26,9 @@ if ( ! class_exists( 'Sticky_cpt_posts' ) ) :
             $label = __( "Sticky" );
             $count = count( $result );
 
-            $link = "<a href='edit.php?post_type=".$post_type."&show_sticky=1'>".$label." <span class='count'>(".$count.")</span></a>";
+            $current = ( isset($_GET['show_sticky']) && $_GET['show_sticky'] ) ? 'class="current" ' : '';
+
+            $link = "<a ".$current."href='edit.php?post_type=".$post_type."&show_sticky=1'>".$label." <span class='count'>(".$count.")</span></a>";
 
             $views = Sticky_cpt_posts::insertArrayIndex( $views, $link , 'all' );
 
