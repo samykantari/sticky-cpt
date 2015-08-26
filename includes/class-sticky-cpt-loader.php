@@ -26,9 +26,6 @@ if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
 
             $post_types = $this->get_all_cpt();
 
-            // Hook permetant de gérer les CPT si besoin
-            $post_types = apply_filters( 'sticky_cpt_add_cpt', $post_types );
-
             // Ajout automatique des préfix
             array_walk($post_types, array($this, 'add_prefix'));
 
@@ -57,7 +54,8 @@ if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
             );
             $post_types = get_post_types( $args );
 
-            return $post_types;
+            // Hook permetant de gérer les CPT si besoin
+            return apply_filters( 'sticky_cpt_add_cpt', $post_types );
         }
 
 
