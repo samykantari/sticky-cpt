@@ -23,7 +23,7 @@ Ce hook permet  de gérer les CPT si besoin
 
     add_filter( 'sticky_cpt_add_cpt' , 'add_cpt' );
 
-    function add_cpt( $post_types ){
+    function add_cpt( $post_types ) {
 
         $post_types['newcpt'] = 'newcpt';
 
