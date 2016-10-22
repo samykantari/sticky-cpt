@@ -1,20 +1,27 @@
 <?php
 
 /**
- * @wordpress-plugin
  * Plugin Name:       Sticky CPT
  * Plugin URI:        http://www.samy-kantari.fr/
- * Description:       Ajoute la possibilité de mettre en sticky les customs post type
+ * Description:       Add the possibility of "sticky" CPT
  * Version:           1.0.0
  * Author:            Kantari Samy
  * Author URI:        http://www.samy-kantari.fr/
+ * License:           GPLv2
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.html
  */
 
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-    exit; // Exit if accessed directly
-}
+
+/**
+ * DEFINES
+ */
+define( 'STICKY_CPT'          , '1.0.0' );
+define( 'STICKY_CPT_FILE'     , __FILE__ );
+define( 'STICKY_CPT_PATH'     , realpath( plugin_dir_path( STICKY_CPT_FILE ) ) . '/' );
+define( 'STICKY_CPT_INCLUDES' , realpath( STICKY_CPT_PATH . 'includes/' ) . '/' );
+
 
 if ( ! class_exists( 'Sticky_cpt' ) ) :
 
@@ -22,44 +29,23 @@ if ( ! class_exists( 'Sticky_cpt' ) ) :
         protected $plugin_name;
         protected $version;
 
-
         protected static $instance = null;
 
         public function __construct() {
 
             $this->plugin_name = 'sticky-cpt';
-            $this->version = '1.0.0';
-
-            register_activation_hook(__FILE__, array( $this, 'sticky_cpt_activation') );
-            register_deactivation_hook(__FILE__, array( $this, 'sticky_cpt_deactivation') );
-
+            $this->version     = STICKY_CPT;
 
             $this->load_dependencies();
-
         }
 
-        /**
-         * [load_dependencies]
-         */
+
         public function load_dependencies() {
 
-            include_once 'includes/class-sticky-cpt-loader.php';
-            include_once 'includes/class-sticky-cpt-posts.php';
+            include_once STICKY_CPT_INCLUDES . 'class-sticky-cpt-loader.php';
+            include_once STICKY_CPT_INCLUDES . 'class-sticky-cpt-posts.php';
 
         }
-
-
-        public function sticky_cpt_activation() {
-
-        }
-
-        public function sticky_cpt_deactivation() {
-
-        }
-
-
-
-
 
         public static function get_instance() {
 

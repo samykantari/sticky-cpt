@@ -1,36 +1,29 @@
 <?php
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-    exit; // Exit if accessed directly
-}
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+
 
 if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
 
-    class Sticky_cpt_Loader{
+    class Sticky_cpt_Loader {
 
         protected static $instance = null;
 
-        public function __construct(){
-
-            add_action( 'admin_init', array($this, 'init'));
-
-            add_action( 'admin_footer-post.php', array( $this ,'add_sticky' ) );
-            add_action( 'admin_footer-post-new.php', array( $this ,'add_sticky' ) );
-
-            add_action('admin_footer-edit.php', array($this, 'add_sticky_quick_edit'));
-
+        public function __construct() {
+            add_action( 'admin_init', array( $this, 'init' ) );
+            add_action( 'admin_footer-post.php', array( $this , 'add_sticky' ) );
+            add_action( 'admin_footer-post-new.php', array( $this , 'add_sticky' ) );
+            add_action( 'admin_footer-edit.php', array( $this, 'add_sticky_quick_edit' ) );
         }
 
-        public function init(){
 
+        public function init() {
             $post_types = $this->get_all_cpt();
 
-            // Ajout automatique des préfix
-            array_walk($post_types, array($this, 'add_prefix'));
+            array_walk( $post_types, array( $this, 'add_prefix' ) );
 
             foreach( $post_types as $hook )
-                add_filter( "views_$hook" ,  array($this, 'edit_counter'));
+                add_filter( "views_$hook",  array( $this, 'edit_counter' ) );
 
         }
 
@@ -39,39 +32,34 @@ if ( ! class_exists( 'Sticky_cpt_Loader' ) ) :
         }
 
 
-
-        public function edit_counter ($views) {
-            $views = Sticky_cpt_posts::edit_counter( $views );
-
-            return $views;
+        public function edit_counter( $views ) {
+            return Sticky_cpt_posts::edit_counter( $views );
         }
 
-        private function get_all_cpt(){
-            // Récupération de tout les nouveaux CPT
+
+        private function get_all_cpt() {
             $args = array(
                'public'   => true,
                '_builtin' => false
             );
             $post_types = get_post_types( $args );
 
-            // Hook permetant de gérer les CPT si besoin
             return apply_filters( 'sticky_cpt_add_cpt', $post_types );
         }
 
 
-        public function add_sticky_quick_edit(){
+        public function add_sticky_quick_edit() {
 
             global $typenow, $pagenow;
 
             $post_types = $this->get_all_cpt();
 
-            if ( $pagenow != 'edit.php' || !in_array($typenow, $post_types) || !current_user_can( 'edit_others_posts' ) ) return false;
+            if ( $pagenow != 'edit.php' || !in_array( $typenow, $post_types ) || !current_user_can( 'edit_others_posts' ) ) return false;
 
-            $label = __( "Make this post sticky" );
-
+            $label         = __( "Make this post sticky" );
             $labelBulkEdit = __( "Sticky" );
-            $NotSticky = __( "Not Sticky" );
-            $NoChange = __( "&mdash; No Change &mdash;" );
+            $NotSticky     = __( "Not Sticky" );
+            $NoChange      = __( "&mdash; No Change &mdash;" );
 
 $script = <<<HTML
 <script>
@@ -88,21 +76,27 @@ HTML;
             echo $script;
         }
 
-        public function add_sticky(){
+        public function add_sticky() {
             global $post, $typenow;
 
             $post_types = $this->get_all_cpt();
 
-            if ( !in_array($typenow, $post_types) || !current_user_can( 'edit_others_posts' ) ) return false;
+            if ( !in_array( $typenow, $post_types ) || !current_user_can( 'edit_others_posts' ) ) return false;
 
-            $label = __( "Stick this post to the front page" );
+            $label   = __( "Stick this post to the front page" );
             $checked = checked( is_sticky( $post->ID ) );
+            $title   = '';
+
+            if( is_sticky() ) {
+                $title = "$('#post-visibility-display').text('".__( 'Public, Sticky' )."')";
+            }
 
 $script = <<<HTML
 <script>
     jQuery(function($) {
         var sticky = "<br/><span id='sticky-span'><input id='sticky' name='sticky' type='checkbox' value='sticky' $checked /> <label for='sticky' class='selectit'>$label</label><br /></span>";
         $('[for=visibility-radio-public]').append(sticky);
+        $title
     });
 </script>
 HTML;
