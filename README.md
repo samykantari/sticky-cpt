@@ -2,11 +2,15 @@
 
 ## Description
 
-* Le plugin donne la possibilité de mettre les customs post type en sticky
+* Add the possibility of "sticky" CPT.
 
-## Fonctionnement
+The plugin allows to highlight the CPT in the same way as would the WordPress core functionality for posts.
 
-Une fois l'article en sticky, on procède normalement :)
+You can highlight new content created for your CPT.
+
+It is also possible to highlight the content quickly thanks to bulk actions.
+
+## Start example
 
 	$args = array(
 	    'post_type'      => ['project'],
@@ -19,12 +23,9 @@ Une fois l'article en sticky, on procède normalement :)
 
 ## Hook
 
-Ce hook permet  de gérer les CPT si besoin
-
     add_filter( 'sticky_cpt_add_cpt' , 'add_cpt' );
 
-    function add_cpt( $post_types ) {
-
+    function add_cpt( $post_types ){
         $post_types['newcpt'] = 'newcpt';
 
         return $post_types;
